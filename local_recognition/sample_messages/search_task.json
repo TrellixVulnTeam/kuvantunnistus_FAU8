@@ -1,0 +1,10 @@
+{
+    "recognitiontask": {
+	  "taskid": "search_id1",
+	  "recognize": ["lupiini", "kurtturuusu"],
+    	  "imageurls": ["s3://kuvatietovarasto-recognition-dev/testing/testset1/kurtturuusu.jpg",
+                        "s3://kuvatietovarasto-recognition-dev/testing/testset1/lupins1.jpg"],
+	  "max_boxes": 10,
+          "min_score": 0.35
+    }
+}

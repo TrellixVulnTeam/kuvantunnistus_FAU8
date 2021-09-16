@@ -1,0 +1,11 @@
+{
+    "aws": {
+        "aws_access_key_id": "id",
+        "aws_secret_access_key": "key",
+        "region_name": "region"
+    },
+    "recognition": {
+        "sqs_queue": "sqs_queue_name",
+        "local_images_path": "./local_images"
+    }
+}

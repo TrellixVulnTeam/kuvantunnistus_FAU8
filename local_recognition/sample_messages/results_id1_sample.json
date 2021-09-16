@@ -1,0 +1,24 @@
+{
+	"recognition": {
+		"image": [{
+			"imageurl": "./local_images/search_id1/lupins1.jpg",
+			"results": [{
+					"label": "lupiini",
+					"probability": "37",
+					"x_min": "0.8134835958480835",
+					"y_min": "0.608364462852478",
+					"x_max": "0.925437450408935",
+					"y_max": "0.6516823768615723"
+				},
+				{
+					"label": "lupiini",
+					"probability": "36",
+					"x_min": "0.5271400213241577",
+					"y_min": "0.530536413192749",
+					"x_max": "0.5793312788009644",
+					"y_max": "0.6876592040061951"
+				}
+			]
+		}]
+	}
+}
