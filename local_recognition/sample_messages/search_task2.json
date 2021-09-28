@@ -1,0 +1,13 @@
+{
+    "recognitiontask": {
+	  "taskid": "search_id2",
+	  "recognize": ["kurtturuusu"],
+    	  "imageurls": ["s3://kuvatietovarasto-recognition-dev/testing/testset2/00006_00438_04150_3-173078482.jpg",
+            "s3://kuvatietovarasto-recognition-dev/testing/testset2/02595_002_00580_2_0438-365275582.jpg",
+            "s3://kuvatietovarasto-recognition-dev/testing/testset2/353_1_4530_1_001-173553420.jpg",
+            "s3://kuvatietovarasto-recognition-dev/testing/testset2/rosebush1.jpg",
+            "s3://kuvatietovarasto-recognition-dev/testing/testset2/rosebush2.jpg"],
+	  "max_boxes": 10,
+          "min_score": 0.15
+    }
+}

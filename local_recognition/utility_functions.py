@@ -285,7 +285,7 @@ def log_results(detection_model, category_index, image_paths):
 
         print('Done')
 
-def json_results(detection_model, category_index, image_paths, min_score_thresh):
+def json_results(detection_model, category_index, image_paths, min_score_thresh, search_labels):
 
   # do we need timestamp in json?
   #timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -331,20 +331,22 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh)
                   class_name = str(category_index[classes[i]]['name'])
               else:
                   class_name = 'N/A'
-      
-              score = round(100*scores[i])
-              box = tuple(boxes[i].tolist())
-              ymin, xmin, ymax, xmax = box
 
-              result_block = json.loads('{"label": "", "probability": "","x_min": "", "y_min": "", "x_max": "", "y_max": "" }')
-              result_block["label"] = class_name
-              result_block["probability"] = score
-              result_block["y_min"] = ymin
-              result_block["x_min"] = xmin
-              result_block["y_max"] = ymax
-              result_block["x_max"] = xmax
+              if search_labels == None or class_name in search_labels:
 
-              image_block["results"].append(result_block)
+                score = round(100*scores[i])
+                box = tuple(boxes[i].tolist())
+                ymin, xmin, ymax, xmax = box
+
+                result_block = json.loads('{"label": "", "probability": "","x_min": "", "y_min": "", "x_max": "", "y_max": "" }')
+                result_block["label"] = class_name
+                result_block["probability"] = score
+                result_block["y_min"] = ymin
+                result_block["x_min"] = xmin
+                result_block["y_max"] = ymax
+                result_block["x_max"] = xmax
+
+                image_block["results"].append(result_block)
                         
       # Add recognition results
       if num_detections > 0:

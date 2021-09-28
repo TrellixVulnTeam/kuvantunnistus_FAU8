@@ -24,8 +24,7 @@
             // array for label colors
 
             // list search results
-
-            for (let i = 0; i < 4; i++) { 
+            for (let i = 0; i < result["recognition"]["image"].length; i++) { 
 
                 var image_result = result["recognition"]["image"][i];
 
@@ -37,7 +36,7 @@
 
                 const img = new Image();
 
-                img.src = "../local_images/search_id1/" + image_result["imageurl"]
+                img.src = "../local_images/search_id2/" + image_result["imageurl"]
                 img.onload = () => {
 
                     img.style = "border:5px solid black";
@@ -62,8 +61,8 @@
 
                         const label_index = foundLabels.indexOf(label);
                         
-                        //const label_text = label + " " + res["probability"] + "%";
-                        const label_text = label;
+                        const label_text = label + " " + res["probability"] + "%";
+                        //const label_text = label;
 
                         console.log("found: " + label_text);
 
@@ -108,7 +107,7 @@
         {
             console.log("showResults()")
 
-            fetch("../local_images/search_id1/search_id1.json")
+            fetch("../local_images/search_id2/search_id2.json")
                 .then(response => response.json())
                 .then(json => showRecognition(json));
         }    

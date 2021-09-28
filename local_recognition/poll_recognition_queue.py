@@ -23,8 +23,11 @@ session = boto3.Session(
     region_name = config["aws"]["region_name"]
 )
 
-#TODO: put this to config
-supported_labels = ["lupiini", "kurtturuusu"]
+# Labels that this search engine supports
+supported_labels = ['lupiini', 'kurtturuusu']
+
+# Labels that are asked in the search task. This is gathered below from JSON.
+task_labels = []
 
 sqs = session.resource('sqs', region_name = config["aws"]["region_name"])
 
@@ -51,9 +54,8 @@ if len(tasks) > 0:
     for key, value in task["recognitiontask"].items(): 
 
       if key == "recognize" and any(label in supported_labels for label in value):
-        #for label in value.items():
-        # if label in supported_labels:
-        # Yes, we know this category. Handle the task..
+
+        task_labels.append(value)
         print("One or more labels in the recognition task is supported by this recognition provider.")
         label_supported = True
 
@@ -74,7 +76,7 @@ if len(tasks) > 0:
           print("Local directory " , localimagepath ,  " already exists")
 
         # - download locally the image from S3
-        s3 = session.client('s3', region_name="eu-west-1")
+        s3 = session.client('s3', region_name=config["aws"]["region_name"])
 
         for imageurl in value:              
           bucketname = imageurl.split("/")[2]
@@ -100,7 +102,7 @@ if len(tasks) > 0:
       # get local paths of images
       image_paths = get_image_paths(localimagepath)
     
-      result = json_results(detection_model, category_index, image_paths, min_score)
+      result = json_results(detection_model, category_index, image_paths, min_score, task_labels)
 
       #print(result)
       with open(localimagepath + taskid + '.json', 'w') as f:
