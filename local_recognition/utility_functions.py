@@ -290,6 +290,8 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh,
   # do we need timestamp in json?
   #timestr = time.strftime("%Y%m%d-%H%M%S")
 
+  print(search_labels)
+
   json_result = json.loads('{"recognition":{"image": []}}')
 
   for image_path in image_paths:
@@ -323,6 +325,8 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh,
       # keep only the filename
       image_block["imageurl"] = image_path.split("/")[-1]
 
+      results_found = False
+
       for i in range(boxes.shape[0]):
 
           if scores[i] > min_score_thresh:
@@ -347,9 +351,10 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh,
                 result_block["x_max"] = xmax
 
                 image_block["results"].append(result_block)
+                results_found = True
                         
       # Add recognition results
-      if num_detections > 0:
+      if results_found == True:
         json_result["recognition"]["image"].append(image_block)
 
   return json_result

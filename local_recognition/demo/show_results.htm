@@ -36,7 +36,7 @@
 
                 const img = new Image();
 
-                img.src = "../local_images/search_id2/" + image_result["imageurl"]
+                img.src = "../local_images/qa_search_1/" + image_result["imageurl"]
                 img.onload = () => {
 
                     img.style = "border:5px solid black";
@@ -107,7 +107,7 @@
         {
             console.log("showResults()")
 
-            fetch("../local_images/search_id2/search_id2.json")
+            fetch("../local_images/qa_search_1/qa_search_1_result.json")
                 .then(response => response.json())
                 .then(json => showRecognition(json));
         }    

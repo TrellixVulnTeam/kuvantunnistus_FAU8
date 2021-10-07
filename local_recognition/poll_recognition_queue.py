@@ -17,10 +17,16 @@ with open("../../configuration/recognition_conf.json") as json_config_file:
 #### RECOGNITION WORKFLOW
 
 # Start a session in AWS
-session = boto3.Session(
+control_session = boto3.Session(
     aws_access_key_id = config["aws"]["aws_access_key_id"],
     aws_secret_access_key = config["aws"]["aws_secret_access_key"],
     region_name = config["aws"]["region_name"]
+)
+
+image_session = boto3.Session(
+    aws_access_key_id = config["images"]["aws_access_key_id"],
+    aws_secret_access_key = config["images"]["aws_secret_access_key"],
+    region_name = config["images"]["region_name"]
 )
 
 # Labels that this search engine supports
@@ -29,7 +35,7 @@ supported_labels = ['lupiini', 'kurtturuusu']
 # Labels that are asked in the search task. This is gathered below from JSON.
 task_labels = []
 
-sqs = session.resource('sqs', region_name = config["aws"]["region_name"])
+sqs = control_session.resource('sqs', region_name = config["aws"]["region_name"])
 
 # Check if there is tasks for us in queue
 
@@ -55,7 +61,7 @@ if len(tasks) > 0:
 
       if key == "recognize" and any(label in supported_labels for label in value):
 
-        task_labels.append(value)
+        task_labels = value
         print("One or more labels in the recognition task is supported by this recognition provider.")
         label_supported = True
 
@@ -76,7 +82,7 @@ if len(tasks) > 0:
           print("Local directory " , localimagepath ,  " already exists")
 
         # - download locally the image from S3
-        s3 = session.client('s3', region_name=config["aws"]["region_name"])
+        s3 = image_session.client('s3', region_name=config["aws"]["region_name"])
 
         for imageurl in value:              
           bucketname = imageurl.split("/")[2]
@@ -105,7 +111,7 @@ if len(tasks) > 0:
       result = json_results(detection_model, category_index, image_paths, min_score, task_labels)
 
       #print(result)
-      with open(localimagepath + taskid + '.json', 'w') as f:
+      with open(localimagepath + taskid + '_result.json', 'w') as f:
         f.write(json.dumps(result))
 
       # should we delete the message from SQS?
