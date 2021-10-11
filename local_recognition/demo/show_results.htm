@@ -55,7 +55,7 @@
 
                         var label = res["label"];
 
-                        console.log(label);
+                        //console.log(label);
 
                         if (!foundLabels.includes(label)) { foundLabels.push(label); }
 
@@ -64,7 +64,7 @@
                         const label_text = label + " " + res["probability"] + "%";
                         //const label_text = label;
 
-                        console.log("found: " + label_text);
+                        //console.log("found: " + label_text);
 
                         const y_min = up_y + (res["y_min"] * image_height);
                         const x_min = up_x + (res["x_min"] * image_width);

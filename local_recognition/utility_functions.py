@@ -28,8 +28,12 @@ def load_config():
     path_to_labels = "./annotations/label_map.pbtxt"
     category_index = label_map_util.create_category_index_from_labelmap(path_to_labels,
                                                                         use_display_name=True)
-    path_to_CFG = "./models/v2/efficientdet_d4_coco17_tpu-32/pipeline.config"
-    path_to_CKPT = "./models/v2/efficientdet_d4_coco17_tpu-32/checkpoint" 
+
+    path_to_CFG = "./models/v3/centernet_hg104_512x512_coco17_tpu-8/pipeline.config"
+    path_to_CKPT = "./models/v3/centernet_hg104_512x512_coco17_tpu-8/checkpoint" 
+
+    #path_to_CFG = "./models/v2/efficientdet_d4_coco17_tpu-32/pipeline.config"
+    #path_to_CKPT = "./models/v2/efficientdet_d4_coco17_tpu-32/checkpoint" 
 
     #path_to_CFG = "./models/v1/efficientdet_d1_coco17_tpu-32/pipeline.config"
     #path_to_CKPT = "./models/v1/efficientdet_d1_coco17_tpu-32/checkpoint" 
@@ -290,8 +294,6 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh,
   # do we need timestamp in json?
   #timestr = time.strftime("%Y%m%d-%H%M%S")
 
-  print(search_labels)
-
   json_result = json.loads('{"recognition":{"image": []}}')
 
   for image_path in image_paths:
@@ -352,6 +354,8 @@ def json_results(detection_model, category_index, image_paths, min_score_thresh,
 
                 image_block["results"].append(result_block)
                 results_found = True
+
+                #print("found " + class_name + " " + str(score) + "%")
                         
       # Add recognition results
       if results_found == True:

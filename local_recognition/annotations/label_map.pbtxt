@@ -1,9 +1,9 @@
 item {
     id: 1
-    name: 'lupiini'
+    name: 'kurtturuusu'
 }
 
 item {
     id: 2
-    name: 'kurtturuusu'
+    name: 'lupiini'
 }

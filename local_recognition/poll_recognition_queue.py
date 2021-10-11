@@ -39,7 +39,6 @@ sqs = control_session.resource('sqs', region_name = config["aws"]["region_name"]
 
 # Check if there is tasks for us in queue
 
-#TODO: put queue name in config
 recognition_queue = get_queue(sqs, config["recognition"]["sqs_queue"])
 tasks = receive_messages(recognition_queue, max_number=10, wait_time=0)
 
