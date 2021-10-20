@@ -1,0 +1,156 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        function selectColor(colorNum, colors){
+           if (colors < 1) colors = 1; // defaults to one color - avoid divide by zero
+           return "hsl(" + (colorNum * (360 / colors) % 360) + ",100%,50%)";
+        }
+
+        var image_index = 0;
+        var image_count = 0;
+
+        function NextImage() {
+
+            if (image_index < image_count)
+            {
+                image_index += 1;
+                document.getElementById("ImageIndex").innerHTML = image_index+1;
+
+                showResults();
+            }
+        }
+
+        function PreviousImage() {
+
+            if (image_index > 0)
+            {
+                image_index -= 1;
+                document.getElementById("ImageIndex").innerHTML = image_index+1;
+
+                showResults();
+            }
+        }
+
+        function showRecognition(result) {
+
+            const canvas = document.getElementById("result_canvas");
+            const ctx = canvas.getContext("2d");
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            var image_width = 400*2;
+            var image_height = 350*2;
+            const image_padding = 6;
+            const image_columns = 2;
+            var possibleLabels = 2;
+
+            // array for label colors
+            image_count = result["recognition"]["image"].length;
+
+            document.getElementById("ImageCount").innerHTML = image_count;
+
+            var image_result = result["recognition"]["image"][image_index];
+
+            console.log(image_result["imageurl"]);
+
+            // load image
+
+            const img = new Image();
+
+            img.src = "../local_images/qa_search_1/" + image_result["imageurl"]
+            img.onload = () => {
+
+                img.style = "border:5px solid black";
+                img.width = image_width;
+                img.height = image_height;
+
+                var up_x = 0;
+                var up_y = 0;
+
+                var foundLabels = [];
+
+                ctx.drawImage(img, 0, 0, image_width, image_height);
+
+                // loop recognitions from one image 
+                result["recognition"]["image"][image_index]["results"].forEach(res => {
+
+                    var label = res["label"];
+
+                    //console.log(label);
+
+                    if (!foundLabels.includes(label)) { foundLabels.push(label); }
+
+                    const label_index = foundLabels.indexOf(label);
+                    
+                    const label_text = label + " " + res["probability"] + "%";
+                    //const label_text = label;
+
+                    //console.log("found: " + label_text);
+
+                    const y_min = up_y + (res["y_min"] * image_height);
+                    const x_min = up_x + (res["x_min"] * image_width);
+                    const y_max = up_y + (res["y_max"] * image_height);
+                    const x_max = up_x + (res["x_max"] * image_width);
+
+                    const box_width = x_max - x_min;
+                    const box_height = y_max - y_min;
+
+                    // bounding box
+                    ctx.beginPath();
+                    ctx.rect(x_min, y_min, box_width, box_height);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = selectColor(label_index, possibleLabels);
+
+                    ctx.stroke();
+
+                    // filled box under label
+                    ctx.font = "10px Arial";
+                    text_width = ctx.measureText(label_text).width;
+
+                    ctx.lineWidth = 3;
+                    ctx.fillStyle = selectColor(label_index, possibleLabels);
+                    ctx.beginPath();
+                    ctx.fillRect(x_min-1, y_min-12, text_width+4, 12);
+                    ctx.stroke();
+
+                    // label
+                    ctx.font = "10px Arial";
+                    ctx.fillStyle = 'black';
+                    // - add 1px padding
+                    ctx.fillText(label_text, x_min+2, y_min-1);
+
+                }); // recognition loop
+            } // image on load
+        }    
+
+        function showResults()
+        {
+            fetch("../local_images/qa_search_1/qa_search_1_result.json")
+                .then(response => response.json())
+                .then(json => showRecognition(json));
+        }    
+
+    </script>
+
+</head>
+<body onload="showResults()">
+
+    <h1>Hakutulokset</h1>
+
+    <p>
+        <a id="ImageCount">0</a>/<a id="ImageIndex">1</a>
+    </p>
+    
+    <div>
+        <button type="button" onclick="PreviousImage()">< Edellinen</button> &nbsp;
+        <button type="button" onclick="NextImage()">Seuraava ></button>    
+    </div>
+    <br/>
+
+    <canvas id="result_canvas" width="1600" height="1250">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>             
+
+</body>    
+</html>
