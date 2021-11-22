@@ -1,0 +1,148 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        const api_url =  'https://kuvatietovarasto-layersapi-dev.s3.eu-west-1.amazonaws.com/';
+    
+        function selectColor(colorNum, colors){
+           if (colors < 1) colors = 1; // defaults to one color - avoid divide by zero
+           return "hsl(" + (colorNum * (360 / colors) % 360) + ",100%,50%)";
+        }
+
+        const image_url_base = "https://kuvatietovarasto-layersapi-dev.s3.eu-west-1.amazonaws.com/";        
+
+        function showRecognition(result,searchid,imageurl_param) {
+
+            const canvas = document.getElementById("result_canvas");
+            const ctx = canvas.getContext("2d");
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            var image_width = 550;
+            var image_height = 450;
+            const image_padding = 6;
+            const image_columns = 2;
+            var possibleLabels = 2;
+
+            image_count = result["recognition"]["image"].length;
+
+            var image_index = 0;
+            var image_result;
+            
+            for (i = 0; i < image_count; i++) {
+                image_result = result["recognition"]["image"][i];
+
+                if (image_result["imageurl"] == image_url) {
+                    image_index = i;
+                }
+                
+            }
+
+            var image_result = result["recognition"]["image"][image_index];
+
+            // load image
+
+            const img = new Image();
+            
+            const image_url_parts = imageurl_param.split('_');
+            
+
+            img.src = image_url_base + searchid + "/" + imageurl_param;
+            
+            img.onload = () => {
+
+                img.style = "border:5px solid black";
+                img.width = image_width;
+                img.height = image_height;
+
+                var up_x = 0;
+                var up_y = 0;
+
+                var foundLabels = [];
+
+                ctx.drawImage(img, 0, 0, image_width, image_height);
+
+                // loop recognitions from one image 
+                result["recognition"]["image"][image_index]["results"].forEach(res => {
+
+                    var label = res["label"];
+
+                    //console.log(label);
+
+                    if (!foundLabels.includes(label)) { foundLabels.push(label); }
+
+                    const label_index = foundLabels.indexOf(label);
+                    
+                    const label_text = label + " " + res["probability"] + "%";
+                    //const label_text = label;
+
+                    //console.log("found: " + label_text);
+
+                    const y_min = up_y + (res["y_min"] * image_height);
+                    const x_min = up_x + (res["x_min"] * image_width);
+                    const y_max = up_y + (res["y_max"] * image_height);
+                    const x_max = up_x + (res["x_max"] * image_width);
+
+                    const box_width = x_max - x_min;
+                    const box_height = y_max - y_min;
+
+                    // bounding box
+                    ctx.beginPath();
+                    ctx.rect(x_min, y_min, box_width, box_height);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = selectColor(label_index, possibleLabels);
+
+                    ctx.stroke();
+
+                    // filled box under label
+                    ctx.font = "10px Arial";
+                    text_width = ctx.measureText(label_text).width;
+
+                    ctx.lineWidth = 3;
+                    ctx.fillStyle = selectColor(label_index, possibleLabels);
+                    ctx.beginPath();
+                    ctx.fillRect(x_min-1, y_min-12, text_width+4, 12);
+                    ctx.stroke();
+
+                    // label
+                    ctx.font = "10px Arial";
+                    ctx.fillStyle = 'black';
+                    // - add 1px padding
+                    ctx.fillText(label_text, x_min+2, y_min-1);
+
+                }); // recognition loop
+            } // image on load
+        }    
+
+        function showResults()
+        {
+            const urlParams = new URLSearchParams(window.location.search);
+            const search_id_param = urlParams.get('search_id');
+            const image_url_param = urlParams.get('image_url');
+            //document.getElementById("ImageURL").innerHTML = image_url_param;
+            image_url = image_url_param;
+            
+            const json_url = [api_url,search_id_param,'/',search_id_param,'.json'].join('');
+            
+            console.log(json_url);
+            
+            fetch(json_url)
+                .then(response => response.json())
+                .then(json => showRecognition(json,search_id_param,image_url_param));
+        }    
+
+    </script>
+
+</head>
+<body onload="showResults()">
+    
+    <p>
+        <a id="ImageURL"></a>
+    </p>
+    
+    <canvas id="result_canvas" width="550" height="450">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>             
+
+</body>    
+</html>

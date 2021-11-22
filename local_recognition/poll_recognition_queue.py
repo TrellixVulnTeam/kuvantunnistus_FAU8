@@ -110,7 +110,7 @@ if len(tasks) > 0:
       result = json_results(detection_model, category_index, image_paths, min_score, task_labels)
 
       #print(result)
-      with open(localimagepath + taskid + '_result.json', 'w') as f:
+      with open(localimagepath + taskid + '.json', 'w') as f:
         f.write(json.dumps(result))
 
       # should we delete the message from SQS?

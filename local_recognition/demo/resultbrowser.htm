@@ -82,43 +82,49 @@
                     if (!foundLabels.includes(label)) { foundLabels.push(label); }
 
                     const label_index = foundLabels.indexOf(label);
+
+                    const prob = parseInt(res["probability"]);
+
+                    if (prob > 10) {
                     
-                    const label_text = label + " " + res["probability"] + "%";
-                    //const label_text = label;
+                        const label_text = label + " " + res["probability"] + "%";
+                        //const label_text = label;
 
-                    //console.log("found: " + label_text);
+                        //console.log("found: " + label_text);
 
-                    const y_min = up_y + (res["y_min"] * image_height);
-                    const x_min = up_x + (res["x_min"] * image_width);
-                    const y_max = up_y + (res["y_max"] * image_height);
-                    const x_max = up_x + (res["x_max"] * image_width);
+                        const y_min = up_y + (res["y_min"] * image_height);
+                        const x_min = up_x + (res["x_min"] * image_width);
+                        const y_max = up_y + (res["y_max"] * image_height);
+                        const x_max = up_x + (res["x_max"] * image_width);
 
-                    const box_width = x_max - x_min;
-                    const box_height = y_max - y_min;
+                        const box_width = x_max - x_min;
+                        const box_height = y_max - y_min;
 
-                    // bounding box
-                    ctx.beginPath();
-                    ctx.rect(x_min, y_min, box_width, box_height);
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = selectColor(label_index, possibleLabels);
+                        // bounding box
+                        ctx.beginPath();
+                        ctx.rect(x_min, y_min, box_width, box_height);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = selectColor(label_index, possibleLabels);
 
-                    ctx.stroke();
+                        ctx.stroke();
 
-                    // filled box under label
-                    ctx.font = "10px Arial";
-                    text_width = ctx.measureText(label_text).width;
+                        // filled box under label
+                        ctx.font = "10px Arial";
+                        text_width = ctx.measureText(label_text).width;
 
-                    ctx.lineWidth = 3;
-                    ctx.fillStyle = selectColor(label_index, possibleLabels);
-                    ctx.beginPath();
-                    ctx.fillRect(x_min-1, y_min-12, text_width+4, 12);
-                    ctx.stroke();
+                        ctx.lineWidth = 3;
+                        ctx.fillStyle = selectColor(label_index, possibleLabels);
+                        ctx.beginPath();
+                        ctx.fillRect(x_min-1, y_min-12, text_width+4, 12);
+                        ctx.stroke();
 
-                    // label
-                    ctx.font = "10px Arial";
-                    ctx.fillStyle = 'black';
-                    // - add 1px padding
-                    ctx.fillText(label_text, x_min+2, y_min-1);
+                        // label
+                        ctx.font = "10px Arial";
+                        ctx.fillStyle = 'black';
+                        // - add 1px padding
+                        ctx.fillText(label_text, x_min+2, y_min-1);
+                    }
+
 
                 }); // recognition loop
             } // image on load
