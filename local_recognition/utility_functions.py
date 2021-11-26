@@ -289,12 +289,12 @@ def log_results(detection_model, category_index, image_paths):
 
         print('Done')
 
-def json_results(detection_model, category_index, image_paths, min_score_thresh, search_labels):
+def json_results(detection_model, category_index, image_paths, min_score_thresh, search_labels, searchid):
 
   # do we need timestamp in json?
   #timestr = time.strftime("%Y%m%d-%H%M%S")
 
-  json_result = json.loads('{"recognition":{"image": []}}')
+  json_result = json.loads('{"recognition":{"searchid":"' + searchid + '","image": []}}')
 
   for image_path in image_paths:
 

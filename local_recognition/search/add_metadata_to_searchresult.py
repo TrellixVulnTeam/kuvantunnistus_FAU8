@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import pandas.io.json as pdj
 
-searchid = "vieraslajit_v2020_tie4_tieosa425"
+searchid = "vieraslajit_v2020_tie4_tieosa426"
 
 imagefolder = "../local_images/"
 metafolder = "./"

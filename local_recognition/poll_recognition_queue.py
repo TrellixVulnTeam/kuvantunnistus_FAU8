@@ -51,6 +51,11 @@ if len(tasks) > 0:
 
     task_json = task_item.body
 
+    # HACK: load search string from local file as the SQS item is too small
+
+    with open('search/vieraslajit_v2020_tie4_tieosa426_search.json', 'r') as file:
+      task_json = file.read().replace('\n', '')
+     
     task = json.loads(task_json)
 
     label_supported = False
@@ -107,7 +112,7 @@ if len(tasks) > 0:
       # get local paths of images
       image_paths = get_image_paths(localimagepath)
     
-      result = json_results(detection_model, category_index, image_paths, min_score, task_labels)
+      result = json_results(detection_model, category_index, image_paths, min_score, task_labels, taskid)
 
       #print(result)
       with open(localimagepath + taskid + '.json', 'w') as f:

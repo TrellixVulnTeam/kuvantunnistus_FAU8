@@ -2,7 +2,7 @@ import os
 import glob
 import json
 
-searchid = "vieraslajit_v2020_tie4_tieosa425"
+searchid = "vieraslajit_v2020_tie4_tieosa426"
 
 imagefolder = "../local_images/"
 
