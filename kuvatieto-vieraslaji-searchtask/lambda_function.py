@@ -1,7 +1,6 @@
 import requests
 import json
 import boto3
-from pyproj import Proj, transform
 
 def GetImageMetadata(road, roadsection_start, roadsection_end, start_time, end_time):
     query = """
