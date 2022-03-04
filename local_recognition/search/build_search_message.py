@@ -2,9 +2,9 @@ import json
 import glob
 from pyproj import Proj, transform
 
-read_files = glob.glob("REST-results/*.json")
+read_files = glob.glob("./REST-results/LAP_Kemi_v2014_4_424/*.json")
 
-searchid = "vieraslajit_v2020_tie4_tieosa426"
+searchid = "vieraslajit_v2014_tie4_tieosa424"
 
 task = json.loads('{"recognitiontask": {"taskid": "","recognize": ["kurtturuusu","lupiini"],"imageurls": [],"max_boxes": 10,"min_score": 0.30}}')
 imeta = json.loads('{"metadata": {"image": []}}')
@@ -25,7 +25,7 @@ for f in read_files:
             s3path = "s3://kuvatietovarasto-prod/picture/" + i["awsTunnus"]
             task["recognitiontask"]["imageurls"].append(s3path)
 
-            imeta_block = json.loads('{"imageurl": "","xcoord": 0,"ycoord": 0,"lat":0, "lon":0}')
+            imeta_block = json.loads('{"imageurl": "","xcoord": 0,"ycoord": 0,"lat":0, "lon":0, "date":""}')
             imeta_block["imageurl"] = s3path.split("/")[-1]
             imeta_block["xcoord"] = i["xGivenCoord"]
             imeta_block["ycoord"] = i["yGivenCoord"]
@@ -34,6 +34,8 @@ for f in read_files:
 
             imeta_block["lat"] = y
             imeta_block["lon"] = x
+
+            imeta_block["date"] = i["date"][:10]
 
             imeta["metadata"]["image"].append(imeta_block)
 

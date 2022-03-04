@@ -1,0 +1,11 @@
+
+pip install --target ./package requests
+pip install --target ./package boto3
+pip install --target ./package pyproj
+cd package
+zip -r ../kuvatieto-vieraslaji-searchtask.zip .
+cd ..
+zip -g kuvatieto-vieraslaji-searchtask.zip lambda_function.py
+
+aws lambda update-function-code --function-name kuvatieto-vieraslaji-searchtask --zip-file fileb://kuvatieto-vieraslaji-searchtask.zip --profile kuvatieto-dev
+  

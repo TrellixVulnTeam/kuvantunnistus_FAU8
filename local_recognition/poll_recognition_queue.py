@@ -53,7 +53,7 @@ if len(tasks) > 0:
 
     # HACK: load search string from local file as the SQS item is too small
 
-    with open('search/vieraslajit_v2020_tie4_tieosa426_search.json', 'r') as file:
+    with open('search/search_v2/vieraslajit_v2020_tie4_tieosa426_search.json', 'r') as file:
       task_json = file.read().replace('\n', '')
      
     task = json.loads(task_json)
@@ -72,6 +72,8 @@ if len(tasks) > 0:
       if label_supported and key == "imageurls": 
 
         taskid = task["recognitiontask"]["taskid"]
+        print("task id: " + taskid)
+
         localimagepath = '{}/{}/'.format(config["recognition"]["local_images_path"], taskid)
 
         min_score = task["recognitiontask"]["min_score"]

@@ -1,0 +1,17 @@
+{
+    "aws": {
+        "aws_access_key_id": "AKIAQUOUKZT2U6OUUJPC",
+        "aws_secret_access_key": "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",
+        "region_name": "eu-west-1"
+    },
+    "recognition": {
+        "sqs_queue": "kuvatietovarasto-recognition-dev",
+        "local_images_path": "./local_images",
+        "layersapi_bucket": "kuvatietovarasto-layersapi-dev"
+    },
+    "images": {
+        "aws_access_key_id": "AKIAQHUQCK56TAULNC32",
+        "aws_secret_access_key": "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",
+        "region_name": "eu-west-1"
+    }
+}
