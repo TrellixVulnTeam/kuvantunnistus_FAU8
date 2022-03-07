@@ -62,6 +62,14 @@ def lambda_handler(event, context):
     with open("./config/recognition_conf.json") as json_config_file:
         config = json.load(json_config_file)
 
+    event = {
+        "road": "353",
+        "roadsection_start": "1",
+        "roadsection_end": "1",
+        "start_time": "1.1.2014",
+        "end_time": "31.12.2014"
+    }
+
 
     road = event['road'] # "353"
     roadsection_start = event['roadsection_start'] # "1"
@@ -70,11 +78,18 @@ def lambda_handler(event, context):
     start_time = event['start_time'] # "1.1.2014"
     end_time = event['end_time'] #1.11.2015"
 
+    road = "353"
+    roadsection_start = "1"
+    roadsection_end = "1"
+
+    start_time = "1.1.2014"
+    end_time = "1.1.2015"
+
     searchid = "vieraslajit_v" + start_time.split(".")[-1] + "_" + end_time.split(".")[-1] + "_tie" + road + "_tieosa" + roadsection_start + "_" + roadsection_end
 
     metaresult = GetImageMetadata(road, roadsection_start, roadsection_end, start_time, end_time)
 
-    if (metaresult != "-1"):
+    if (metaresult != "-1" and metaresult.get("data") is not None):
 
         print("Query resulted " + str(len(metaresult["data"]["getSearchFormImages"])) + " images for analysis.") 
 
@@ -93,7 +108,6 @@ def lambda_handler(event, context):
         with open("./tmp/" + searchid + "_imagepaths.json", "w") as f:
             json.dump(imagepath_json, f)
 
-        
         control_session = boto3.Session(
             aws_access_key_id = config["aws"]["aws_access_key_id"],
             aws_secret_access_key = config["aws"]["aws_secret_access_key"],
@@ -147,4 +161,10 @@ def lambda_handler(event, context):
 
         return {
             'status': 0
+        }
+    else:
+        print(metaresult)
+
+        return {
+            'status': -1
         }
